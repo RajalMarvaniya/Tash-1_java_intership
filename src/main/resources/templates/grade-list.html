@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Grades</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap; /* Added to wrap elements when needed */
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            flex-grow: 1;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #218838;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        .actions {
+            display: flex;
+        }
+
+        .actions button {
+            margin-right: 10px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #218838;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #218838;
+        }
+
+        .message {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        /* Style for delete button */
+        .actions button[type="submit"] {
+            background-color: #dc3545; /* Red color for delete button */
+        }
+
+        /* Style for CGPA button */
+        .actions button[type="submit"].cgpa-button {
+            background-color: #218838; /* Light parrot color for CGPA button */
+        }
+    </style>
+
+</head>
+<body>
+<h1>Grades for <span th:text="${course.name}">Course</span></h1>
+<form th:action="@{/grades}" th:object="${grade}" method="post">
+    <input type="hidden" name="courseId" th:value="${course.id}" />
+    <input type="text" th:field="*{studentName}" placeholder="Student Name" required />
+    <input type="text" th:field="*{examName}" placeholder="Exam Name" required />
+    <input type="number" id="gradeInput" placeholder="Grade in integer" required />
+    <span class="message" style="display: none;">Type grade in only integers, not in float.</span> <!-- Hidden by default -->
+    <button type="submit">Add Grade</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>Student Name</th>
+        <th>Exam Name</th>
+        <th>Grade</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="grade : ${grades}">
+        <td th:text="${grade.studentName}"></td>
+        <td th:text="${grade.examName}"></td>
+        <td th:text="${grade.grade}"></td>
+        <td class="actions">
+            <form th:action="@{/grades/delete/{id}(id=${grade.id})}" method="post">
+                <input type="hidden" name="courseId" th:value="${course.id}" />
+                <button type="submit">Delete</button>
+            </form>
+            <form th:action="@{/grades/student/{studentName}(studentName=${grade.studentName})}" method="get">
+                <button type="submit" class="cgpa-button">CGPA</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{/courses}" class="back-button">Back to Courses</a>
+
+<script>
+    window.onload = function() {
+        var gradeInput = document.getElementById('gradeInput');
+        gradeInput.value = ''; // Clear the initial value
+        gradeInput.placeholder = 'Grade in integer'; // Set the placeholder text
+
+        gradeInput.addEventListener('focus', function() {
+            var message = document.querySelector('.message');
+            message.style.display = 'block'; // Show the message when input is focused
+        });
+
+        gradeInput.addEventListener('blur', function() {
+            var message = document.querySelector('.message');
+            message.style.display = 'none'; // Hide the message when input loses focus
+        });
+    };
+</script>
+
+</body>
+</html>

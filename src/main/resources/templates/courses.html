@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Courses</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f2f6f2;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        li span {
+            flex-grow: 1;
+        }
+
+        li form {
+            display: inline;
+            margin-left: 10px;
+        }
+
+        li button {
+            background-color: #dc3545;
+        }
+
+        li button:hover {
+            background-color: #c82333;
+        }
+
+        .show-grades {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #218838;
+            color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .show-grades:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<h1>Courses</h1>
+<form th:action="@{/courses}" th:object="${course}" method="post">
+    <input type="text" th:field="*{name}" placeholder="Course Name" required />
+    <input type="text" th:field="*{code}" placeholder="Course Code" required />
+    <button type="submit">Add Course</button>
+</form>
+<ul>
+    <li th:each="course : ${courses}">
+        <span>
+            <strong th:text="${course.name}"></strong> - <span th:text="${course.code}"></span>
+        </span>
+        <button type="submit" onclick="window.location.href='/courses/delete/'+${course.id}">Delete</button>
+        <a class="show-grades" th:href="@{/courses/{id}/grades(id=${course.id})}">Show Grades</a>
+    </li>
+</ul>
+</body>
+</html>
