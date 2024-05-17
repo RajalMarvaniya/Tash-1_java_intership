@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>CGPA</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #94c76c;
+        }
+
+        .container {
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            margin-top: -10px;
+        }
+
+        .box {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: inline-block;
+            width: 570px; /* Adjust width to make both boxes fit in the container */
+            margin-right: 5%; /* Adjust margin to create space between boxes */
+            text-align: left;
+            vertical-align: top; /* Align boxes to the top */
+        }
+
+        .cgpa {
+            font-size: 24px;
+            color: #0e100e;
+            margin-bottom: 10px;
+        }
+
+        .student-info span {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background-color: #218838;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>CGPA</h1>
+    <div class="box">
+        <div class="cgpa" th:text="'CGPA: ' + ${cgpa}"></div>
+    </div>
+    <div class="box">
+        <div class="student-info">
+            <h2>Student Information</h2>
+            <span th:text="'Student Name: ' + ${studentName}"></span>
+        </div>
+    </div>
+    <canvas id="cgpaChart" width="400" height="200"></canvas> <!-- Added canvas for the chart -->
+    <a th:href="@{/courses}" class="back-btn">Back to Courses</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Included Chart.js library -->
+<script>
+    // Get the context of the canvas element we want to select
+    var ctx = document.getElementById('cgpaChart').getContext('2d');
+
+    // CGPA data
+    var cgpa = [[${cgpa}]]; // Retrieve CGPA value from Thymeleaf model
+
+    // Define the data
+    var chartData = {
+        labels: ['CGPA'],
+        datasets: [{
+            label: 'CGPA',
+            data: [cgpa],
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    // Define the options
+    var chartOptions = {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    max: 4.0 // Maximum CGPA value
+                }
+            }]
+        }
+    };
+
+    // Create the chart
+    var cgpaChart = new Chart(ctx, {
+        type: 'bar', // Changed to bar chart for single value
+        data: chartData,
+        options: chartOptions
+    });
+</script>
+</body>
+</html>
